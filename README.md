@@ -1,6 +1,6 @@
 # Image Processing CLI in Golang
 
-This CLI will take input image as command line arguments and can display various options.
+This CLI will take an image as input in command line arguments and then give menu choices for manipulating the given image.
 
 It can adjust brightness, contrast, saturation with many more features to come.
 
