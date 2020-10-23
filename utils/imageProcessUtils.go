@@ -3,6 +3,7 @@ package utils
 import (
 	"fmt"
 	"image"
+	"os"
 	"path"
 
 	"github.com/anthonynsimon/bild/adjust"
@@ -10,10 +11,9 @@ import (
 )
 
 func saveImage(result *image.RGBA, outputFile string) {
-	//TODO : error in making directory properly with perfect permissions: getting permission denied while saving file
-	// if _, err := os.Stat(outputDirName); os.IsNotExist(err) {
-	// 	os.Mkdir(outputDirName, 0755)
-	// }
+	if _, err := os.Stat(outputDirName); os.IsNotExist(err) {
+		os.Mkdir(outputDirName, 0777)
+	}
 
 	outputFile = path.Join(outputDirName, outputFile)
 	if err := imgio.Save(outputFile, result, imgio.PNGEncoder()); err != nil {

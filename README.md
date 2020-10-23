@@ -8,8 +8,8 @@ To build and run this CLI, you need golang installed on your machine and then ty
 
 go build
 
-./img_process_cli <optional-path-name> <image-name>
+./img_process_cli \<optional-path-name> \<image-name>
 
 If parent directory path name is not specified, it will take the path from where you run the CLI and will look for input image at that path only. If parent directory path name is specified, it will look for the input image in the specified path.
 
-There is some bug regarding output_images folder. For now, before running commands, you need to create a folder named output_images in the path specified. This bug will be fixed soon.
+Some extra options like export output images to some other image format will likely be available soon.
