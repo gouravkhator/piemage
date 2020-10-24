@@ -22,20 +22,21 @@ func saveImage(result *image.RGBA, outputFile string) {
 	}
 }
 
-//AdjustBrightness adjusts brightness of image using bild
-func AdjustBrightness(img image.Image, outputFile string) {
-	result := adjust.Brightness(img, 0.3)
-	saveImage(result, outputFile)
-}
+//AdjustQuality adjusts different qualities of an image like brightness, contrast, saturation etc.
+func AdjustQuality(img image.Image, outputFile string, params float64, qualityName string) {
+	var result *image.RGBA
+	switch qualityName {
+	case "brightness":
+		result = adjust.Brightness(img, params)
+	case "contrast":
+		result = adjust.Contrast(img, params)
+	case "saturation":
+		result = adjust.Saturation(img, params)
+	default:
+		result = nil
+		fmt.Printf("Invalid quality named %v to adjust..\nThis is not supported in our application..\n\n", qualityName)
+		return
+	}
 
-//AdjustContrast adjusts contrast of image using bild
-func AdjustContrast(img image.Image, outputFile string) {
-	result := adjust.Contrast(img, -0.5)
-	saveImage(result, outputFile)
-}
-
-//AdjustSaturation adjusts saturation of image using bild
-func AdjustSaturation(img image.Image, outputFile string) {
-	result := adjust.Saturation(img, 1.5)
 	saveImage(result, outputFile)
 }
