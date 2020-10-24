@@ -54,7 +54,7 @@ func checkError(str string, err error, exitFlag bool) {
 
 func takeOptionsAndProcess(img image.Image, pathName string) {
 	var choice int
-	var params float64 //params is the different values which we want to adjust photo to
+	var params float64 //params is the quality values which we want to adjust photo to
 	var outputFileName string
 
 	outputDirName = path.Join(pathName, "output_images")
@@ -62,7 +62,7 @@ func takeOptionsAndProcess(img image.Image, pathName string) {
 myloop:
 	for {
 		fmt.Println("Menu for image processing options : ")
-		fmt.Print("1. Adjust Brightness\n2. Adjust Contrast\n3. Adjust Saturation\n\nEnter a choice (or 0 to exit) : ")
+		fmt.Print("1. Adjust Brightness\n2. Adjust Contrast\n3. Adjust Saturation\n4. Grey out the image\n\nEnter a choice (or 0 to exit) : ")
 		fmt.Scanf("%d", &choice)
 
 		switch choice {
@@ -72,7 +72,7 @@ myloop:
 			fmt.Scanf("%f", &params)
 			fmt.Printf("\nThe option selected adjusts brightness to %f level\n", params)
 			fmt.Printf("Check the %s in output_images folder for results...\n\n", outputFileName)
-			AdjustQuality(img, outputFileName, params, "brightness")
+			adjustQuality(img, outputFileName, params, "brightness")
 
 		case 2:
 			outputFileName = "contrasty_output.png"
@@ -80,19 +80,24 @@ myloop:
 			fmt.Scanf("%f", &params)
 			fmt.Printf("\nThe option selected adjusts contrast to %f level\n", params)
 			fmt.Printf("Check the %s in output_images folder for results...\n\n", outputFileName)
-			AdjustQuality(img, outputFileName, params, "contrast")
+			adjustQuality(img, outputFileName, params, "contrast")
 
 		case 3:
 			outputFileName = "saturated_output.png"
 			fmt.Print("Enter the saturation level : ")
-
 			fmt.Scanf("%f", &params)
 			fmt.Printf("\nThe option selected adjusts saturation to %f level\n", params)
 			fmt.Printf("Check the %s in output_images folder for results...\n\n", outputFileName)
-			AdjustQuality(img, outputFileName, params, "saturation")
+			adjustQuality(img, outputFileName, params, "saturation")
+
+		case 4:
+			outputFileName = "greyed_output.png"
+			fmt.Print("\nThe option selected greys out the image\n")
+			fmt.Printf("Check the %s in output_images folder for results...\n\n", outputFileName)
+			greyOut(img, outputFileName)
 
 		case 0:
-			fmt.Println("Exiting..")
+			fmt.Println("\n----Thank you for using my application----\nPlease star my repository github.com/gouravkhator/image-processing-cli\nAlso provide feedback on my repository..\n..Exiting..")
 			break myloop
 		default:
 			fmt.Println("Invalid Choice try again...")
