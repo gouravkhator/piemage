@@ -11,22 +11,26 @@ import (
 )
 
 //saves image to required path
-func saveImage(result *image.RGBA, outputFile string) {
+func saveImage(result *image.RGBA, outputFileName string, outputDirName string) {
 	if _, err := os.Stat(outputDirName); os.IsNotExist(err) {
 		os.Mkdir(outputDirName, 0777)
 	}
 
-	outputFile = path.Join(outputDirName, outputFile)
+	outputFileName = path.Join(outputDirName, outputFileName)
 
 	//TODO : we can change Encoder to JPEGEncoder or PNGEncoder depending on output extension
-	if err := imgio.Save(outputFile, result, imgio.PNGEncoder()); err != nil {
+	if err := imgio.Save(outputFileName, result, imgio.PNGEncoder()); err != nil {
 		fmt.Println(err)
 		return
 	}
 }
 
-//this function will used in other go files inside utils package for adjusting different qualities of image
-func adjustQuality(img image.Image, outputFile string, params float64, qualityName string) {
+/*
+AdjustQuality adjusts different qualities of image like brightness, contrast, saturation.
+Valid qualityName are :
+"brightness", "contrast", "saturation"
+*/
+func AdjustQuality(img image.Image, params float64, outputFile, outputDirName, qualityName string) {
 	var result *image.RGBA
 	switch qualityName {
 	case "brightness":
@@ -41,11 +45,11 @@ func adjustQuality(img image.Image, outputFile string, params float64, qualityNa
 		return
 	}
 
-	saveImage(result, outputFile)
+	saveImage(result, outputFile, outputDirName)
 }
 
-//for greying out image
-func greyOut(img image.Image, outputFile string) {
+//GreyOut will grey out the image and output to the outputFile in the desired outputDirName folder
+func GreyOut(img image.Image, outputFileName, outputDirName string) {
 	rgba := adjust.Brightness(img, 0)
 
 	width := rgba.Bounds().Dx()
@@ -62,5 +66,5 @@ func greyOut(img image.Image, outputFile string) {
 		}
 	}
 
-	saveImage(rgba, outputFile)
+	saveImage(rgba, outputFileName, outputDirName)
 }

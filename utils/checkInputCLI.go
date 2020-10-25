@@ -10,10 +10,9 @@ import (
 	"github.com/anthonynsimon/bild/imgio"
 )
 
-var outputDirName string //it is used in utils package only in some go files
-
-//CheckInput checks the command line arguments and inputs
-func CheckInput(args []string) {
+//InputImage checks the command line arguments for image and path name
+//and does image processing via options given in CLI
+func InputImage(args []string) {
 	var imageName, pathName string
 	var err error
 	//we can also dynamically take either 1 or 2 inputs : pathName and imageName
@@ -57,7 +56,7 @@ func takeOptionsAndProcess(img image.Image, pathName string) {
 	var params float64 //params is the quality values which we want to adjust photo to
 	var outputFileName string
 
-	outputDirName = path.Join(pathName, "output_images")
+	var outputDirName = path.Join(pathName, "output_images")
 	fmt.Printf("All the output images will be stored inside %s\n", outputDirName)
 myloop:
 	for {
@@ -72,7 +71,7 @@ myloop:
 			fmt.Scanf("%f", &params)
 			fmt.Printf("\nThe option selected adjusts brightness to %f level\n", params)
 			fmt.Printf("Check the %s in output_images folder for results...\n\n", outputFileName)
-			adjustQuality(img, outputFileName, params, "brightness")
+			AdjustQuality(img, params, outputFileName, outputDirName, "brightness")
 
 		case 2:
 			outputFileName = "contrasty_output.png"
@@ -80,7 +79,7 @@ myloop:
 			fmt.Scanf("%f", &params)
 			fmt.Printf("\nThe option selected adjusts contrast to %f level\n", params)
 			fmt.Printf("Check the %s in output_images folder for results...\n\n", outputFileName)
-			adjustQuality(img, outputFileName, params, "contrast")
+			AdjustQuality(img, params, outputFileName, outputDirName, "contrast")
 
 		case 3:
 			outputFileName = "saturated_output.png"
@@ -88,16 +87,16 @@ myloop:
 			fmt.Scanf("%f", &params)
 			fmt.Printf("\nThe option selected adjusts saturation to %f level\n", params)
 			fmt.Printf("Check the %s in output_images folder for results...\n\n", outputFileName)
-			adjustQuality(img, outputFileName, params, "saturation")
+			AdjustQuality(img, params, outputFileName, outputDirName, "saturation")
 
 		case 4:
 			outputFileName = "greyed_output.png"
 			fmt.Print("\nThe option selected greys out the image\n")
 			fmt.Printf("Check the %s in output_images folder for results...\n\n", outputFileName)
-			greyOut(img, outputFileName)
+			GreyOut(img, outputFileName, outputDirName)
 
 		case 0:
-			fmt.Println("\n----Thank you for using my application----\nPlease star my repository github.com/gouravkhator/image-processing-cli\nAlso provide feedback on my repository..\n..Exiting..")
+			fmt.Println("\n----Thank you for using my application----\nPlease star my repository github.com/gouravkhator/piemage\nAlso provide feedback on my repository..\n..Exiting..")
 			break myloop
 		default:
 			fmt.Println("Invalid Choice try again...")

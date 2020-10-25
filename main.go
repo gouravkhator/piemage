@@ -1,11 +1,12 @@
 package main
 
 import (
-	"img_process_cli/utils"
 	"os"
+
+	"github.com/piemage/utils"
 )
 
 func main() {
 	args := os.Args[1:]
-	utils.CheckInput(args)
+	utils.InputImage(args)
 }
