@@ -1,5 +1,5 @@
 //piemage is a CLI image processing tool which provides different image manipulation options
-module github.com/piemage
+module github.com/gouravkhator/piemage
 
 go 1.14
 

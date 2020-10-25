@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/piemage/utils"
+	"github.com/gouravkhator/piemage/utils"
 )
 
 func main() {
