@@ -6,19 +6,23 @@ This project also allows developers to use some of its image processing function
 
 It can adjust brightness, contrast, saturation with many more features to explore.
 
-## Usage
+## CLI Usage
 
 To build and run this CLI, you need golang installed on your machine. Type in the terminal :
 
+```
 go build
 
 ./piemage \<optional-path-name> \<image-name>
+```
 
 If parent directory path name is not specified, it will take the path from where you run the CLI and will look for input image at that path only. If parent directory path name is specified, it will look for the input image in the specified path.
 
 To use some of its image processing functions in your code, you need to type this in your terminal :
 
+```
 go get github.com/gouravkhator/piemage
+```
 
 Then, you can import the packages from this module and use the underlying functions.
 

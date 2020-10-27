@@ -11,11 +11,11 @@ import (
 	"github.com/gouravkhator/piemage/imgprocess"
 )
 
-/*inputImage takes image as arguments
+/*readImage takes image name and optional path name as arguments
 
-It processes and opens the image
+It opens the image and invokes processMenu for providing Menu Driven CLI
 */
-func inputImage(args []string) {
+func readImage(args []string) {
 	var imageName, pathName string
 	var err error
 	//we can also dynamically take either 1 or 2 inputs : pathName and imageName
@@ -55,10 +55,10 @@ func checkError(str string, err error, exitFlag bool) {
 	}
 }
 
-//processMenu gives menu options for image manipulation and then calls the corresponding adjustment utils functions
+//processMenu gives menu options for image manipulation and then invokes the corresponding adjustment utils
 func processMenu(img image.Image, pathName string) {
 	var choice int
-	var params float64 //params is the quality values which we want to adjust photo to
+	var filterLevel float64 //filterLevel is the filter level value which we want to adjust photo to
 	var outputFileName string
 
 	var outputDirName = path.Join(pathName, "output_images")
@@ -73,26 +73,26 @@ myloop:
 		case 1:
 			outputFileName = "brighter_output.png"
 			fmt.Print("Enter the brightness level : ")
-			fmt.Scanf("%f", &params)
-			fmt.Printf("\nThe option selected adjusts brightness to %f level\n", params)
+			fmt.Scanf("%f", &filterLevel)
+			fmt.Printf("\nThe option selected adjusts brightness to %f level\n", filterLevel)
 			fmt.Printf("Check the %s in output_images folder for results...\n\n", outputFileName)
-			imgprocess.AdjustQuality(img, params, outputFileName, outputDirName, "brightness")
+			imgprocess.AddFilter(img, outputFileName, outputDirName, "brightness", filterLevel)
 
 		case 2:
 			outputFileName = "contrasty_output.png"
 			fmt.Print("Enter the contrast level : ")
-			fmt.Scanf("%f", &params)
-			fmt.Printf("\nThe option selected adjusts contrast to %f level\n", params)
+			fmt.Scanf("%f", &filterLevel)
+			fmt.Printf("\nThe option selected adjusts contrast to %f level\n", filterLevel)
 			fmt.Printf("Check the %s in output_images folder for results...\n\n", outputFileName)
-			imgprocess.AdjustQuality(img, params, outputFileName, outputDirName, "contrast")
+			imgprocess.AddFilter(img, outputFileName, outputDirName, "contrast", filterLevel)
 
 		case 3:
 			outputFileName = "saturated_output.png"
 			fmt.Print("Enter the saturation level : ")
-			fmt.Scanf("%f", &params)
-			fmt.Printf("\nThe option selected adjusts saturation to %f level\n", params)
+			fmt.Scanf("%f", &filterLevel)
+			fmt.Printf("\nThe option selected adjusts saturation to %f level\n", filterLevel)
 			fmt.Printf("Check the %s in output_images folder for results...\n\n", outputFileName)
-			imgprocess.AdjustQuality(img, params, outputFileName, outputDirName, "saturation")
+			imgprocess.AddFilter(img, outputFileName, outputDirName, "saturation", filterLevel)
 
 		case 4:
 			outputFileName = "greyed_output.png"

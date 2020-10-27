@@ -6,5 +6,5 @@ import (
 
 func main() {
 	args := os.Args[1:]
-	inputImage(args)
+	readImage(args)
 }
