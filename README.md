@@ -13,7 +13,7 @@ To build and run this CLI, you need golang installed on your machine. Type in th
 ```
 go build
 
-./piemage \<optional-path-name> \<image-name>
+./piemage <optional-path-name> <image-name>
 ```
 
 If parent directory path name is not specified, it will take the path from where you run the CLI and will look for input image at that path only. If parent directory path name is specified, it will look for the input image in the specified path.

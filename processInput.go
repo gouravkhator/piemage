@@ -60,6 +60,7 @@ func processMenu(img image.Image, pathName string) {
 	var choice int
 	var filterLevel float64 //filterLevel is the filter level value which we want to adjust photo to
 	var outputFileName string
+	var filterLevelInt int //to store all filter levels for integer values
 
 	var outputDirName = path.Join(pathName, "output_images")
 	fmt.Printf("All the output images will be stored inside %s\n", outputDirName)
@@ -96,9 +97,16 @@ myloop:
 
 		case 4:
 			outputFileName = "greyed_output.png"
-			fmt.Print("\nThe option selected greys out the image\n")
-			fmt.Printf("Check the %s in output_images folder for results...\n\n", outputFileName)
-			imgprocess.GreyOut(img, outputFileName, outputDirName)
+			fmt.Print("Enter the strength of grey (choose between 0 - 255) : ")
+			fmt.Scanf("%d", &filterLevelInt)
+
+			if filterLevelInt >= 0 && filterLevelInt <= 255 {
+				fmt.Printf("\nThe option selected greys out the image to %d strength\n", filterLevelInt)
+				fmt.Printf("Check the %s in output_images folder for results...\n\n", outputFileName)
+				imgprocess.GreyOut(img, uint8(filterLevelInt), outputFileName, outputDirName)
+			} else {
+				fmt.Print("\nThe strength for greying out is not between 0 and 255 so its not allowed. Please try again with valid values..\n\n")
+			}
 
 		case 0:
 			fmt.Println("\n----Thank you for using my application----\nPlease star my repository github.com/gouravkhator/piemage\nAlso provide feedback on my repository\n..Exiting..")

@@ -3,6 +3,7 @@ package imgprocess
 import (
 	"fmt"
 	"image"
+	"math/rand"
 
 	"github.com/anthonynsimon/bild/adjust"
 )
@@ -37,8 +38,8 @@ func AddFilter(img image.Image, outputFileName, outputDirName, filter string, fi
 	writeImage(result, outputFileName, outputDirName)
 }
 
-//GreyOut will grey out the image and output to the outputFileName in the desired outputDirName folder
-func GreyOut(img image.Image, outputFileName, outputDirName string) {
+//GreyOut will grey out the image as per the greyStrength and output to the outputFileName in the desired outputDirName folder
+func GreyOut(img image.Image, greyStrength uint8, outputFileName, outputDirName string) {
 	if img == nil {
 		fmt.Print("Input image does not exists\n")
 		return
@@ -48,10 +49,12 @@ func GreyOut(img image.Image, outputFileName, outputDirName string) {
 	width := rgba.Bounds().Dx()
 	height := rgba.Bounds().Dy()
 
+	rand.Seed(0)
+
 	for i := 0; i < width; i++ {
 		for j := 0; j < height; j++ {
 			c := rgba.RGBAAt(i, j)
-			greyFactor := (c.R + c.G + c.B) / 3
+			greyFactor := ((c.R+c.G+c.B)/3 - greyStrength) % 255
 			c.R = greyFactor
 			c.G = greyFactor
 			c.B = greyFactor
@@ -61,3 +64,16 @@ func GreyOut(img image.Image, outputFileName, outputDirName string) {
 
 	writeImage(rgba, outputFileName, outputDirName)
 }
+
+/*IsolateColor will grey out parts of the image except the input color and output to the outputFileName in the desired outputDirName folder
+
+The input color should be a hexadecimal number.
+*/
+// func IsolateColor(img image.Image, color int, outputFileName, outputDirName string) error {
+// 	colorStr := strconv.Itoa(color)
+// 	colorStr = strings.ToLower(colorStr)
+// 	if colorStr[0] != '0' || colorStr[1] != 'x' {
+// 		return errors.New("Invalid format for input color")
+// 	}
+
+// }
