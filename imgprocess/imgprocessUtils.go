@@ -1,11 +1,15 @@
 package imgprocess
 
 import (
+	"errors"
 	"fmt"
 	"image"
-	"math/rand"
+	"image/color"
+	"math"
+	"path"
 
 	"github.com/anthonynsimon/bild/adjust"
+	"github.com/anthonynsimon/bild/imgio"
 )
 
 /*
@@ -40,16 +44,84 @@ func AddFilter(img image.Image, outputFileName, outputDirName, filter string, fi
 
 //GreyOut will grey out the image as per the greyStrength and output to the outputFileName in the desired outputDirName folder
 func GreyOut(img image.Image, greyStrength uint8, outputFileName, outputDirName string) {
+	//TODO : Has to implement greyStrength here
 	if img == nil {
 		fmt.Print("Input image does not exists\n")
 		return
 	}
 
-	rgba := adjust.Brightness(img, 0)
+	rgba := imgAsRGBA(img)
 	width := rgba.Bounds().Dx()
 	height := rgba.Bounds().Dy()
+	grayScale := image.NewGray(image.Rectangle{image.Point{0, 0}, image.Point{width, height}})
+	for x := 0; x < width; x++ {
+		for y := 0; y < height; y++ {
+			imageColor := img.At(x, y)
+			rr, gg, bb, _ := imageColor.RGBA()
+			r := math.Pow(float64(rr), 2.2)
+			g := math.Pow(float64(gg), 2.2)
+			b := math.Pow(float64(bb), 2.2)
+			m := math.Pow(0.2125*r+0.7154*g+0.0721*b, 1/2.2)
+			Y := uint16(m + 0.5)
+			grayColor := color.Gray{uint8(Y >> 8)}
+			grayScale.Set(x, y, grayColor)
+		}
+	}
 
-	rand.Seed(0)
+	rgba = imgAsRGBA(grayScale.SubImage(grayScale.Bounds()))
+	writeImage(rgba, outputFileName, outputDirName)
+}
+
+/*IsolateColor will grey out parts of the image except the input color and output to the outputFileName in the desired outputDirName folder
+
+The input color should be a hexadecimal number.
+*/
+func IsolateColor(img image.Image, inputColor color.Color, outputFileName, outputDirName string) error {
+	//TODO : This color isolation is only greying out image and not doing color isolation
+
+	if img == nil {
+		return errors.New("Image does not exists")
+	}
+
+	var tempColor color.RGBA
+	GreyOut(img, 0, outputFileName, outputDirName)
+	readImg, err := imgio.Open(path.Join(outputDirName, outputFileName))
+
+	if err != nil {
+		return errors.New("Image manipulation error")
+	}
+
+	readImgRGBA := imgAsRGBA(readImg)
+	width := readImgRGBA.Bounds().Dx()
+	height := readImgRGBA.Bounds().Dy()
+
+	for x := 0; x < width; x++ {
+		for y := 0; y < height; y++ {
+			ored, ogreen, oblue, _ := img.At(x, y).RGBA()
+			reqRed, reqGreen, reqBlue, _ := inputColor.RGBA()
+			if ored == reqRed && ogreen == reqGreen && oblue == reqBlue {
+				tempColor.R = uint8(ored)
+				tempColor.G = uint8(ogreen)
+				tempColor.B = uint8(oblue)
+				readImgRGBA.Set(x, y, tempColor)
+			}
+		}
+	}
+
+	writeImage(readImgRGBA, outputFileName, outputDirName)
+	return nil
+}
+
+//GreyOutOld will grey out the image as per the greyStrength and output to the outputFileName in the desired outputDirName folder
+func GreyOutOld(img image.Image, greyStrength uint8, outputFileName, outputDirName string) {
+	if img == nil {
+		fmt.Print("Input image does not exists\n")
+		return
+	}
+
+	rgba := imgAsRGBA(img)
+	width := rgba.Bounds().Dx()
+	height := rgba.Bounds().Dy()
 
 	for i := 0; i < width; i++ {
 		for j := 0; j < height; j++ {
@@ -64,16 +136,3 @@ func GreyOut(img image.Image, greyStrength uint8, outputFileName, outputDirName 
 
 	writeImage(rgba, outputFileName, outputDirName)
 }
-
-/*IsolateColor will grey out parts of the image except the input color and output to the outputFileName in the desired outputDirName folder
-
-The input color should be a hexadecimal number.
-*/
-// func IsolateColor(img image.Image, color int, outputFileName, outputDirName string) error {
-// 	colorStr := strconv.Itoa(color)
-// 	colorStr = strings.ToLower(colorStr)
-// 	if colorStr[0] != '0' || colorStr[1] != 'x' {
-// 		return errors.New("Invalid format for input color")
-// 	}
-
-// }

@@ -3,6 +3,7 @@ package imgprocess
 import (
 	"fmt"
 	"image"
+	"image/draw"
 	"os"
 	"path"
 
@@ -22,4 +23,12 @@ func writeImage(img *image.RGBA, outputFileName string, outputDirName string) {
 		fmt.Println(err)
 		return
 	}
+}
+
+//imgAsRGBA converts src of type Image to RGBA
+func imgAsRGBA(src image.Image) *image.RGBA {
+	bounds := src.Bounds()
+	img := image.NewRGBA(bounds)
+	draw.Draw(img, bounds, src, bounds.Min, draw.Src)
+	return img
 }
