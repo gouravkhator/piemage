@@ -54,6 +54,7 @@ func GreyOut(img image.Image, greyStrength uint8, outputFileName, outputDirName 
 	width := rgba.Bounds().Dx()
 	height := rgba.Bounds().Dy()
 	grayScale := image.NewGray(image.Rectangle{image.Point{0, 0}, image.Point{width, height}})
+
 	for x := 0; x < width; x++ {
 		for y := 0; y < height; y++ {
 			imageColor := img.At(x, y)
@@ -76,7 +77,7 @@ func GreyOut(img image.Image, greyStrength uint8, outputFileName, outputDirName 
 
 The input color should be a hexadecimal number.
 */
-func IsolateColor(img image.Image, inputColor color.Color, outputFileName, outputDirName string) error {
+func IsolateColor(img image.Image, inputColor color.RGBA, outputFileName, outputDirName string) error {
 	//TODO : This color isolation is only greying out image and not doing color isolation
 
 	if img == nil {
@@ -95,14 +96,14 @@ func IsolateColor(img image.Image, inputColor color.Color, outputFileName, outpu
 	width := readImgRGBA.Bounds().Dx()
 	height := readImgRGBA.Bounds().Dy()
 
+	reqRed, reqGreen, reqBlue, reqAlpha := inputColor.R, inputColor.G, inputColor.B, inputColor.A
+
 	for x := 0; x < width; x++ {
 		for y := 0; y < height; y++ {
-			ored, ogreen, oblue, _ := img.At(x, y).RGBA()
-			reqRed, reqGreen, reqBlue, _ := inputColor.RGBA()
-			if ored == reqRed && ogreen == reqGreen && oblue == reqBlue {
-				tempColor.R = uint8(ored)
-				tempColor.G = uint8(ogreen)
-				tempColor.B = uint8(oblue)
+			ored, ogreen, oblue, oalpha := img.At(x, y).RGBA()
+
+			if uint8(ored) == reqRed && uint8(ogreen) == reqGreen && uint8(oblue) == reqBlue && uint8(oalpha) == reqAlpha {
+				tempColor.R, tempColor.G, tempColor.B, tempColor.A = uint8(ored), uint8(ogreen), uint8(oblue), uint8(oalpha)
 				readImgRGBA.Set(x, y, tempColor)
 			}
 		}
